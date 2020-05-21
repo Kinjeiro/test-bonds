@@ -1,0 +1,5 @@
+{
+  "extends": [
+    "fc-lints/tslint.json"
+  ]
+}

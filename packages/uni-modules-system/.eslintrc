@@ -1,0 +1,14 @@
+{
+  "extends": "./node_modules/fc-lints/.eslintrc",
+  "settings": {
+    "import/resolver": {
+//      "webpack": {
+//        "config": "../../node_modules/@pawjs/pawjs/src/webpack/inc/webpack-resolver-config.js"
+//      },
+      "node": {
+//        "paths": ["src"],
+        "extensions": [".js", ".jsx", ".ts", ".tsx"]
+      }
+    }
+  }
+}
