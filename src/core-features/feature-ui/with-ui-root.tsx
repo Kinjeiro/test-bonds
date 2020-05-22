@@ -16,7 +16,7 @@ export default function withUiRoot(Component: any) {
 		// thanks to React context.
 		return (
 		  <StylesProvider jss={ jss }>
-        <ThemeProvider theme={theme}>
+        <ThemeProvider theme={ theme }>
           {/* Reboot kickstart an elegant, consistent, and simple baseline to build upon. */}
           <CssBaseline />
 

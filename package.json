@@ -8,6 +8,7 @@
     "@material-ui/styles": "~4.9.0",
     "@reduxjs/toolkit": "~1.3.6",
     "jss-plugin-template": "latest",
+    "jss-template": "~1.0.1",
     "localforage": "~1.7.3",
     "lodash": "~4.17.15",
     "react": "^16.13.1",
