@@ -9,9 +9,9 @@ import { useActions } from '../../../../core-features/feature-redux/use-actions'
 // ======================================================
 // MODULE
 // ======================================================
-import * as TodoActions from '../redux-actions-todo-list';
 import { Todo } from '../model-todo';
 import { selectTodoList } from '../redux-selectors-todo-list';
+import { actions } from '../redux-todo-list';
 
 
 const useStyles = makeStyles({
@@ -28,16 +28,52 @@ const useStyles = makeStyles({
 export default function TodoTable() {
 	const classes = useStyles();
 	const todoList = useSelector(selectTodoList);
-	const todoActions = useActions(TodoActions);
+	const {
+	  actionToggleTodo,
+    actionDeleteTodo,
+	} = useActions(actions);
 
-	const onRowClick = (todo: Todo) => {
-		if (todo.completed) {
-			todoActions.uncompleteTodo(todo.id);
-		} else {
-			todoActions.completeTodo(todo.id);
-		}
-	};
 
+	// ======================================================
+	// RENDERS
+	// ======================================================
+	const renderRow = (todo: Todo) => {
+	  const {
+	    id,
+      completed,
+      text,
+    } = todo;
+
+	  return (
+      <TableRow
+        key={id}
+        hover
+        onClick={event => actionToggleTodo(id)}
+      >
+        <TableCell padding="none">
+          <Checkbox checked={completed} />
+        </TableCell>
+        <TableCell padding="none">{text}</TableCell>
+        <TableCell padding="none">
+          <IconButton
+            aria-label="Delete"
+            color="default"
+            onClick={ (event) => {
+              event.stopPropagation();
+              actionDeleteTodo(id);
+            } }
+          >
+            <DeleteIcon />
+          </IconButton>
+        </TableCell>
+      </TableRow>
+    );
+  };
+
+
+	// ======================================================
+	// MAIN RENDER
+	// ======================================================
 	return (
 		<Paper className={classes.paper}>
 			<Table className={classes.table}>
@@ -49,31 +85,7 @@ export default function TodoTable() {
 					</TableRow>
 				</TableHead>
 				<TableBody>
-					{todoList.map((n: Todo) => {
-						return (
-							<TableRow
-								key={n.id}
-								hover
-								onClick={event => onRowClick(n)}
-							>
-								<TableCell padding="none">
-									<Checkbox checked={n.completed} />
-								</TableCell>
-								<TableCell padding="none">{n.text}</TableCell>
-								<TableCell padding="none">
-									<IconButton
-										aria-label="Delete"
-										color="default"
-										onClick={() =>
-											todoActions.deleteTodo(n.id)
-										}
-									>
-										<DeleteIcon />
-									</IconButton>
-								</TableCell>
-							</TableRow>
-						);
-					})}
+					{todoList.map(renderRow)}
 				</TableBody>
 			</Table>
 		</Paper>

@@ -1,43 +1,164 @@
-import createReducer from '../../../core-features/feature-redux/createReducer';
+import createReducer from '../../../core-features/feature-redux/utils/create-reducer';
+import createStatusReducer, { StatusState } from '../../../core-features/feature-redux/utils/create-status-reducer';
+import { SimpleAction, UniAction } from '../../../core-features/feature-redux/model-redux';
+import { GlobalState } from '../../../core-features/feature-redux/global-state';
 
 // ======================================================
 // MODULE
 // ======================================================
+import * as api from './api-todo-list';
 import { Todo } from './model-todo';
-import { TodoAction, TodoActions } from './redux-actions-todo-list';
-import { GlobalState } from '../../../core-features/feature-redux/global-state';
+import { selectTodoList } from './redux-selectors-todo-list';
 
-export const initialState: Todo[] = [];
-export const todoListReducer = createReducer<Todo[]>(
+// ======================================================
+// INITIAL STATE
+// ======================================================
+export interface TodoListReduxState extends GlobalState {
+  todoList: Todo[],
+  // todo @ANKU @LOW - this is example mode (for real product need for each todo create 3 status
+  actionAddTodoStatus: StatusState | undefined,
+  actionLoadTodoListStatus: StatusState | undefined,
+  actionToggleTodoStatus: StatusState | undefined,
+  actionDeleteTodoStatus: StatusState | undefined,
+}
+export const initialState: TodoListReduxState = {
+  todoList: [],
+  actionAddTodoStatus: undefined,
+  actionLoadTodoListStatus: undefined,
+  actionToggleTodoStatus: undefined,
+  actionDeleteTodoStatus: undefined,
+};
+
+
+// ======================================================
+// TYPES
+// ======================================================
+const PREFIX = 'todo';
+export const TYPES = {
+  LOAD_TODO_LIST_FETCH:     `${PREFIX}/LOAD_TODO_LIST_FETCH`,
+  LOAD_TODO_LIST_FAIL:      `${PREFIX}/LOAD_TODO_LIST_FAIL`,
+  LOAD_TODO_LIST_SUCCESS:   `${PREFIX}/LOAD_TODO_LIST_SUCCESS`,
+
+  ADD_TODO_FETCH:     `${PREFIX}/ADD_TODO_FETCH`,
+  ADD_TODO_SUCCESS:   `${PREFIX}/ADD_TODO_SUCCESS`,
+  ADD_TODO_FAIL:      `${PREFIX}/ADD_TODO_FAIL`,
+
+  TOGGLE_TODO_FETCH:     `${PREFIX}/TOGGLE_TODO_FETCH`,
+  TOGGLE_TODO_SUCCESS:   `${PREFIX}/TOGGLE_TODO_SUCCESS`,
+  TOGGLE_TODO_FAIL:      `${PREFIX}/TOGGLE_TODO_FAIL`,
+
+  DELETE_TODO_FETCH:     `${PREFIX}/DELETE_TODO_FETCH`,
+  DELETE_TODO_SUCCESS:   `${PREFIX}/DELETE_TODO_SUCCESS`,
+  DELETE_TODO_FAIL:      `${PREFIX}/DELETE_TODO_FAIL`,
+};
+
+// ======================================================
+// ACTION CREATORS
+// ======================================================
+export function getBindActions(api: { [apiMethod: string]: (...args: any[]) => Promise<any> }) {
+  return {
+    actionLoadTodoList(): UniAction<Todo[]> {
+      return {
+        type: [TYPES.LOAD_TODO_LIST_FETCH, TYPES.LOAD_TODO_LIST_SUCCESS, TYPES.LOAD_TODO_LIST_FAIL],
+        payload: api.apiLoadTodoList(),
+      };
+    },
+    actionAddTodo(todo: Todo): UniAction<Todo> {
+      return {
+        uuid: todo.id,
+        type: [TYPES.ADD_TODO_FETCH, TYPES.ADD_TODO_SUCCESS, TYPES.ADD_TODO_FAIL],
+        payload: api.apiAddTodo(todo),
+      };
+    },
+    actionToggleTodo(todoId: number): UniAction<Todo> {
+      // another example Thunk action
+      return async (dispatch, getState) => {
+        dispatch({
+          uuid: todoId,
+          type: TYPES.TOGGLE_TODO_FETCH,
+        });
+
+        try {
+          // for example
+          //noinspection ES6RedundantAwait
+          const apiResult = await Promise.resolve(
+            selectTodoList(getState() as ReduxTodoList).find(({ id }) => id === todoId)
+          );
+
+          dispatch({
+            uuid: todoId,
+            type: TYPES.TOGGLE_TODO_SUCCESS,
+            payload: {
+              ...apiResult,
+              completed: !apiResult!.completed,
+            },
+          });
+        } catch (error) {
+          dispatch({
+            uuid: todoId,
+            type: TYPES.TOGGLE_TODO_FAIL,
+            error,
+          });
+        }
+      };
+    },
+    actionDeleteTodo(todoId: number): UniAction {
+      return {
+        uuid: todoId,
+        type: [TYPES.DELETE_TODO_FETCH, TYPES.DELETE_TODO_SUCCESS, TYPES.DELETE_TODO_FAIL],
+        payload: api.apiDeleteTodo(todoId),
+      };
+    },
+  };
+}
+
+export const actions = getBindActions(api);
+
+// ======================================================
+// REDUCER
+// ======================================================
+const reducer = createReducer<TodoListReduxState, SimpleAction>(
   initialState,
   {
-    [TodoActions.ADD_TODO](state: Todo[], action: TodoAction) {
-      return [...state, action.payload];
-    },
-    [TodoActions.COMPLETE_TODO](state: Todo[], action: TodoAction) {
-      // search after todo item with the given id and set completed to true
-      return state.map(t =>
-        t.id === action.payload ? { ...t, completed: true } : t
-      );
-    },
-    [TodoActions.UNCOMPLETE_TODO](state: Todo[], action: TodoAction) {
-      // search after todo item with the given id and set completed to false
-      return state.map(t =>
-        t.id === action.payload ? { ...t, completed: false } : t
-      );
-    },
-    [TodoActions.DELETE_TODO](state: Todo[], action: TodoAction) {
-      // remove all todos with the given id
-      return state.filter(t => t.id !== action.payload);
-    },
+    [TYPES.LOAD_TODO_LIST_SUCCESS]:
+      'todoList',
+    [TYPES.ADD_TODO_SUCCESS]:
+      (state, action, todo) => ({
+        ...state,
+        todoList: [...state.todoList, todo],
+      }),
+    [TYPES.TOGGLE_TODO_SUCCESS]:
+      (state, action, updatedTodo) => ({
+        ...state,
+        todoList: state.todoList.map((todo) => todo.id === action.uuid ? updatedTodo : todo),
+      }),
+    [TYPES.DELETE_TODO_SUCCESS]:
+      (state, action) => ({
+        ...state,
+        todoList: state.todoList.filter((todo) => todo.id !== action.uuid),
+      }),
+  },
+  {
+    actionLoadTodoListStatus: createStatusReducer(
+      TYPES.LOAD_TODO_LIST_FETCH, TYPES.LOAD_TODO_LIST_SUCCESS, TYPES.LOAD_TODO_LIST_FAIL,
+    ),
+    actionAddTodoStatus: createStatusReducer(
+      TYPES.ADD_TODO_FETCH, TYPES.ADD_TODO_SUCCESS, TYPES.ADD_TODO_FAIL,
+    ),
+    actionToggleTodoStatus: createStatusReducer(
+      TYPES.TOGGLE_TODO_FETCH, TYPES.TOGGLE_TODO_SUCCESS, TYPES.TOGGLE_TODO_FAIL,
+    ),
+    actionDeleteTodoStatus: createStatusReducer(
+      TYPES.DELETE_TODO_FETCH, TYPES.DELETE_TODO_SUCCESS, TYPES.DELETE_TODO_FAIL,
+    ),
   },
 );
 
-export interface ModuleState extends GlobalState {
-  todoList: Todo[],
+export interface ReduxTodoList {
+  todoListState: TodoListReduxState,
 }
 const reducersMap = {
-  todoList: todoListReducer,
+  todoListState: reducer,
 };
 
 export default reducersMap;

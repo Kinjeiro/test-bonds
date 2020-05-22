@@ -3,8 +3,9 @@ import { makeStyles } from '@material-ui/styles';
 import React from 'react';
 import { useSelector } from 'react-redux';
 
-import HomeBox from '../components/HomeBox';
 import { selectTodoList } from '../../../module-todo-list/client/redux-selectors-todo-list';
+
+import HomeBox from '../components/HomeBox';
 
 const useStyles = makeStyles({
   root: {
@@ -42,6 +43,7 @@ export default function HomePage() {
       <Typography variant="h4" gutterBottom>
         You have {todoList.length} TODOs in your list!
       </Typography>
+
       <div className={classes.centerContainer}>
         <HomeBox size={300} color={boxColor} />
         <Button

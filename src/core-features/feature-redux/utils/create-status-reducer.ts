@@ -25,13 +25,14 @@ export default function createStatusReducer(...typesArray: FETCH_ACTION_TYPE) {
   const allTypes = [...fetch, ...success, ...fail];
 
   return (state = INITIAL_STATE, { type, payload, error }: SimpleAction) => {
-    if (!allTypes.includes(type)) {
+    const typeSingle = type as string;
+    if (!allTypes.includes(typeSingle)) {
       return state;
     }
 
-    const isFetching = fetch.includes(type);
-    const isFailed = fail.includes(type);
-    const isLoaded = !isFailed && (state.isLoaded || success.includes(type));
+    const isFetching = fetch.includes(typeSingle);
+    const isFailed = fail.includes(typeSingle);
+    const isLoaded = !isFailed && (state.isLoaded || success.includes(typeSingle));
     const isResponseNotEmpty = payload === 0 || typeof payload === 'boolean' || !!payload;
     const finalError = (isFetching || isLoaded) ? null : error || (payload || state).error;
 

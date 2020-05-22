@@ -1,3 +1,3 @@
-import { ModuleState } from './redux-todo-list';
+import { ReduxTodoList } from './redux-todo-list';
 
-export const selectTodoList = (globalState: ModuleState) => globalState.todoList;
+export const selectTodoList = (globalState: ReduxTodoList) => globalState.todoListState.todoList;

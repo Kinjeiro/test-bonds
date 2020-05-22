@@ -6,7 +6,7 @@ class UniErrorHelper {
   /**
    * Mutable static array
    */
-  static PARSERS: UniErrorParser[];
+  static PARSERS: UniErrorParser[] = [];
 
   /**
    * Add to begin of array.

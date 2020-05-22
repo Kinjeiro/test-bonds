@@ -15,6 +15,7 @@ export type FETCH_ACTION_TYPE = [FETCHING_TYPE, SUCCESS_TYPE, FAILED_TYPE];
 
 export interface SimpleAction<PAYLOAD = any, TYPE = string> extends AnyAction {
   type: TYPE | FETCH_ACTION_TYPE;
+  uuid?: string | number,
   payload?: PAYLOAD | Promise<PAYLOAD>;
   types?: FETCH_ACTION_TYPE;
   errorIsAnswer?: boolean;
@@ -39,8 +40,8 @@ export type UniReducer<
   A extends AnyAction = SimpleAction,
   P = any,
 > = (
-  state: S | undefined,
+  state: S,
   action: A,
   payload?: P | undefined,
-) => S;
+) => S | undefined;
 

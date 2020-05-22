@@ -153,7 +153,11 @@ function arrayConcatMergeCustomizer(objValue: any, newValue: any) {
   return newValue;
 }
 
-export function getFetchTypesByType(...arrayOfFetchTypes: FETCH_ACTION_TYPE) {
+export function getFetchTypesByType(...arrayOfFetchTypes: FETCH_ACTION_TYPE) : {
+  fetch: string[],
+  success: string[],
+  fail: string[],
+} {
   if (!Array.isArray(arrayOfFetchTypes[0])) {
     //@ts-ignore
     // getFetchTypesByType(FETCH, SUCCESS, FAILED) - без массива массивов

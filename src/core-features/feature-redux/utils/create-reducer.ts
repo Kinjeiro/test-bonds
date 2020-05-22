@@ -19,14 +19,14 @@ type StringMap = {
 export default function createReducer<
   STATE = any,
   ACTION extends SimpleAction = SimpleAction,
-  TYPES = { [enumId: string]: string },
 >(
   initialState: STATE,
-  handlers: {
-    [actionType in keyof TYPES]?: UniReducer<STATE, ACTION>
+  handlers?: {
+    [actionType: string]: UniReducer<STATE, ACTION> | string
   },
   fieldsHandlers?: {
-    [field in keyof STATE]?: UniReducer<any, ACTION>
+    //[field in keyof STATE]?: UniReducer<any, ACTION>
+    [field: string]: UniReducer<any, ACTION>
   },
   defaultHandler?: UniReducer<STATE, ACTION>,
 ) {
@@ -45,9 +45,9 @@ export default function createReducer<
       //    }
       //  }
       //);
-      updatedFields = Object.keys(fieldsHandlers).reduce(
-        (result: StringMap, fieldName: string) => {
-          const fieldReducer = updatedFields[fieldName];
+      updatedFields = Object.keys(fieldsHandlers).reduce<StringMap>(
+        (result, fieldName) => {
+          const fieldReducer = fieldsHandlers[fieldName];
 
           const prevFieldState = (state as StringMap)[fieldName];
           const newFieldState = fieldReducer(prevFieldState, action, action[ACTION_PAYLOAD_FIELD]);
@@ -69,12 +69,12 @@ export default function createReducer<
     }
 
     // handlers
-    if (action && typeof action.type === 'string' && action.type in handlers) {
+    if (handlers && action && typeof action.type === 'string' && action.type in handlers) {
       // todo @ANKU @LOW - @ts-ignore
       //@ts-ignore
       let caseReducer = handlers[action.type];
       if (typeof caseReducer === 'string') {
-        // если редьюсер это имя поля, то нужно все, что вернется в payload пихнуть под этой переменной
+        // if reducer is field, neew all payload insert into this field
         caseReducer = createForFieldCaseReducer.bind(this, caseReducer);
       }
       return caseReducer(state, action, action[ACTION_PAYLOAD_FIELD]);

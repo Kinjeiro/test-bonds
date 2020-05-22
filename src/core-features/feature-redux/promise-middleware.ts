@@ -9,6 +9,7 @@ import { ACTION_PROMISE_UNI_ERROR_FIELD, SimpleAction, ThunkAction, UniAction } 
 // improved redux-thunk version
 function isPromise(promise: any) {
   // noinspection Eslint
+  // eslint-disable-next-line
   return promise && (Promise.resolve(promise) == promise || promise.then);
 }
 

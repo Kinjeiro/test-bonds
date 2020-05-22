@@ -4,7 +4,7 @@ import { AppBar, Drawer as DrawerMui, Hidden, IconButton, Toolbar, Typography, u
 import { Theme } from '@material-ui/core/styles';
 import MenuIcon from '@material-ui/icons/Menu';
 import Drawer from '../components/Drawer';
-import logo from '../../../modules/module-home/client/pages/logo.svg';
+//import logo from './logo.svg';
 import { makeStyles } from '@material-ui/styles';
 import { WithRouterProps } from '../../../core-features/feature-router/with-router';
 import { selectTodoList } from '../../../modules/module-todo-list/client/redux-selectors-todo-list';
@@ -109,6 +109,7 @@ export default function MainLayout(props: WithRouterProps) {
             <Drawer todoList={todoList}/>
           </DrawerMui>
         </Hidden>
+
         <Hidden smDown>
           <DrawerMui
             variant="permanent"
@@ -121,7 +122,7 @@ export default function MainLayout(props: WithRouterProps) {
           </DrawerMui>
         </Hidden>
 
-        <img src={logo} className="App-logo" alt="logo"/>
+        {/*<img src={logo} className="App-logo" alt="logo"/>*/}
 
         <div className={classes.content}>
           { routes }
