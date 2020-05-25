@@ -96,18 +96,24 @@ export default function taskCalculatedShare(array, fixed = 3, withoutCache = fal
   });
 }
 
+
+function defaultGenerateArrayItem() {
+  return `${(Math.random()*10).toFixed(1)}`;
+}
+
 /**
  * Calculates the approximate number of elements for which we can calculate fractions within maxTime milliseconds.
  *
- * @param maxTime (5000)
- * @param startLength (1000000)
+ * @param maxTime
+ * @param startLength (1000)
  * @param options -
  *    step = startLength / 10 - search step
  *    measurementRisk = 0.1 - percentage of maxTime to guarantee a more repeatable result
+ *    generateItemFn = (random item fn) - function to generate array test item
  *    withNotCacheDiff = false - (for performance test) - if true compare with no cache time in console
  * @return {number} - approximate number of elements
  */
-export function getMaxArrayLengthByMaxTime(maxTime = 5000, startLength = 1000000, options = {}) {
+export function getMaxArrayLengthByMaxTime(maxTime, startLength = 1000, options = {}) {
   if (!maxTime || maxTime < 0 || !startLength || startLength < 0) {
     return 0;
   }
@@ -115,6 +121,7 @@ export function getMaxArrayLengthByMaxTime(maxTime = 5000, startLength = 1000000
   const {
     step = startLength / 10,
     measurementRisk = 0.1,
+    generateItemFn = defaultGenerateArrayItem,
     withNotCacheDiff = false
   } = options;
 
@@ -127,7 +134,7 @@ export function getMaxArrayLengthByMaxTime(maxTime = 5000, startLength = 1000000
   while(lastResultTime <= maxTimeWithMeasurementRisk) {
     length += step;
 
-    const tempArray = Array.from({ length }, () => `${(Math.random()*10).toFixed(1)}`);
+    const tempArray = Array.from({ length }, generateItemFn);
     const t0 = performance.now();
     taskCalculatedShare(tempArray);
     const t1 = performance.now();

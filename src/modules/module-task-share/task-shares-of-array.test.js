@@ -16,7 +16,7 @@ test('task1 test', () => {
 
   // Border conditions
   expect(taskCalculatedShare([])).toEqual([]);
-  expect(taskCalculatedShare(null)).toEqual([]);
+  expect(taskCalculatedShare).toThrow();
 
   expect(taskCalculatedShare(INNER_ARRAY)).toEqual(RESULT_ARRAY);
 
