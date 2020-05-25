@@ -3,9 +3,9 @@ import { FETCH_ACTION_TYPE, SimpleAction } from '../model-redux';
 
 export class StatusState {
   constructor(
-    readonly isFetching?: boolean,
-    readonly isLoaded?: boolean,
-    readonly isFailed?: boolean,
+    readonly isFetching: boolean = false,
+    readonly isLoaded: boolean = false,
+    readonly isFailed: boolean = false,
     readonly isResponseNotEmpty?: boolean,
     readonly error?: object | undefined,
     readonly updated?: Date,

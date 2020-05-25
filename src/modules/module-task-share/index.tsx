@@ -1,4 +1,4 @@
-import ClientModule from '../../ClientModule';
+import ClientModule from '../../core-features/feature-uni-modules/ClientModule';
 
 import MODULE_NAME from './module-name';
 

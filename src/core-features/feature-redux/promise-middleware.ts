@@ -22,7 +22,7 @@ const promiseMiddleware: Middleware = ({ dispatch, getState }: MiddlewareAPI) =>
   const {
     payload,
     type,
-    types,
+    types, // @depracated - use type (variable for backreference support)
     // бывает что сервер если что-то не найдено отвечает ошибкой с http кодом и ее не нужно показывать как глобальную
     errorIsAnswer,
     ...other

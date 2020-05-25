@@ -7,7 +7,7 @@ import { PersistConfig, persistReducer, persistStore } from 'redux-persist';
 // import thunk from 'redux-thunk';
 import promiseMiddleware from './promise-middleware';
 
-import ClientModule from '../../ClientModule';
+import ClientModule from '../feature-uni-modules/ClientModule';
 
 const persistConfig: PersistConfig<any> = {
 	key: 'root',

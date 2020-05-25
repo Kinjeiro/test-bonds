@@ -17,14 +17,13 @@ export interface SimpleAction<PAYLOAD = any, TYPE = string> extends AnyAction {
   type: TYPE | FETCH_ACTION_TYPE;
   uuid?: string | number,
   payload?: PAYLOAD | Promise<PAYLOAD>;
-  types?: FETCH_ACTION_TYPE;
   errorIsAnswer?: boolean;
   error?: UniError;
   [ACTION_PROMISE_UNI_ERROR_FIELD]?: UniError;
 }
 
 export type ThunkAction<PAYLOAD = any> = (
-  dispatch: Dispatch<SimpleAction>,
+  dispatch: Dispatch<SimpleAction<PAYLOAD>>,
   getState: getStateType
 ) => Promise<void> | void;
 

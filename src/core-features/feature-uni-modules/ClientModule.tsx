@@ -1,5 +1,6 @@
 import { ComponentType } from 'react';
 import { Reducer } from 'redux';
+import { MenuRenderProps } from './MenuRenderProps';
 
 export default class ClientModule {
   readonly moduleName: string;
@@ -32,6 +33,8 @@ export default class ClientModule {
   getRoutesPrefix(): string {
     return this.moduleName;
   }
+
+  MenuRender?: ComponentType<MenuRenderProps>;
 
   static create(moduleParts: Partial<ClientModule>): ClientModule {
     return new ClientModule(moduleParts);

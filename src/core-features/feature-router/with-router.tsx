@@ -4,7 +4,7 @@ import { Router } from 'react-router-dom';
 import { history } from '../feature-redux/configureStore';
 
 
-import ClientModule from '../../ClientModule';
+import ClientModule from '../feature-uni-modules/ClientModule';
 
 export interface WithRouterProps {
   routes: JSX.Element | (JSX.Element | undefined)[],

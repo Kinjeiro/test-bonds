@@ -4,7 +4,7 @@ import { PersistGate } from 'redux-persist/integration/react';
 import { Typography } from '@material-ui/core';
 
 import configureStore from './configureStore';
-import ClientModule from '../../ClientModule';
+import ClientModule from '../feature-uni-modules/ClientModule';
 
 export default function withReduxRoot(Component: any, clientModules: ClientModule[]) {
   const { persistor, store } = configureStore(clientModules);
