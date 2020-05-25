@@ -122,7 +122,6 @@ export enum BondDatePeriodType {
 
 export enum BondGroupBy {
   Yield = 'Yield', // 0.0..30.0 - доходность (Coupon) + доход рыночной стоимости
-  // todo @ANKU @LOW - не понятно то ли числовая, то ли процентная
   Spread = 'Spread', // 0.0..1.0% - разница между покупкой и продажей
   Price = 'Price', // 1..150$
 }

@@ -47,8 +47,8 @@ export default function BondHeader(props: Props) {
   return (
     <div>
       {
-        bondFetching
-          ? 'Loading'
+        !bond || bondFetching
+          ? 'Loading...'
           : renderBond(bond!)
       }
     </div>

@@ -7,8 +7,8 @@ import FormControl from '@material-ui/core/FormControl';
 import InputLabel from '@material-ui/core/InputLabel';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 
-
 import Graph, { GraphContext } from '../../../../features/feature-graph/components/Graph';
+
 // ======================================================
 // MODULE
 // ======================================================
@@ -65,7 +65,7 @@ function getLineConfig(bondDataRequest: BondDataRequest | undefined): ChartConfi
             time: {
               // @ts-ignore
               unit: period === BondDatePeriodType.Max
-                ? undefined
+                ? 'quarter'
                 : period && period.toLowerCase(),
               tooltipFormat: 'll',
               displayFormats: {

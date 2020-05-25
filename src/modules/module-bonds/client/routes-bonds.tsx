@@ -2,7 +2,7 @@ import React from 'react';
 import { Route } from 'react-router-dom';
 
 import MODULE_NAME from '../module-name';
-import { PARAM__BOND_ID } from './routes-paths';
+import { PARAM__BOND_ID, PATH_BONDS_INDEX } from './routes-paths';
 
 import BondPage from './pages/BondPage/BondPage';
 import BondsIndexPage from './pages/BondsIndexPage/BondsIndexPage';
@@ -12,12 +12,12 @@ export default function getModuleRoutes(modulePrefix = MODULE_NAME): JSX.Element
     <>
       <Route
         exact={ true }
-        path={ `/${modulePrefix}` }
+        path={ PATH_BONDS_INDEX }
         component={ BondsIndexPage }
       />
       <Route
         exact={ true }
-        path={ `/${modulePrefix}/:${PARAM__BOND_ID}` }
+        path={ `${PATH_BONDS_INDEX}/:${PARAM__BOND_ID}` }
         component={ BondPage }
       />
     </>
