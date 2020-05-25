@@ -1,5 +1,6 @@
-import React, { ComponentType } from 'react';
+import React, { ComponentType, ElementType } from 'react';
 import { Router } from 'react-router-dom';
+import { History } from 'history';
 
 import { history } from '../feature-redux/configureStore';
 
@@ -10,7 +11,11 @@ export interface WithRouterProps {
   routes: JSX.Element | (JSX.Element | undefined)[],
 }
 
-export default function withRouter(Component: ComponentType<WithRouterProps>, clientModules: ClientModule[]) {
+export default function withRouter(
+  Component: ComponentType<WithRouterProps>,
+  clientModules: ClientModule[],
+  historyCustom?: History,
+): ElementType {
   const routes = clientModules.map((clientModule) => clientModule.getRoutes && (
     <React.Fragment key={ clientModule.getRoutesPrefix() }>
       { clientModule.getRoutes(clientModule.getRoutesPrefix()) }
@@ -19,7 +24,7 @@ export default function withRouter(Component: ComponentType<WithRouterProps>, cl
 
   function WithRouter(props: object) {
     return (
-      <Router history={history}>
+      <Router history={ historyCustom || history }>
         <Component
           { ...props }
           routes={ routes }
