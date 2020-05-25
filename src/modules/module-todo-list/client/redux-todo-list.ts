@@ -79,18 +79,18 @@ export function getBindActions(api: { [apiMethod: string]: (...args: any[]) => P
         });
 
         try {
-          // for example
+          // for example without api to show how to use select
           //noinspection ES6RedundantAwait
-          const apiResult = await Promise.resolve(
-            selectTodoList(getState() as ReduxTodoList).find(({ id }) => id === todoId)
+          const resultTodo: Todo = await Promise.resolve(
+            selectTodoList(getState() as ReduxTodoList).find(({ id }) => id === todoId)!
           );
 
           dispatch({
             uuid: todoId,
             type: TYPES.TOGGLE_TODO_SUCCESS,
             payload: {
-              ...apiResult,
-              completed: !apiResult!.completed,
+              ...resultTodo,
+              completed: !resultTodo.completed,
             },
           });
         } catch (error) {

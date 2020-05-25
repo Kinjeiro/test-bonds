@@ -1,5 +1,4 @@
 import React from 'react';
-import { useSelector } from 'react-redux';
 import {
   AppBar,
   Drawer as DrawerMui,
@@ -11,10 +10,11 @@ import {
   useMediaQuery
 } from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
-import Drawer from '../components/Drawer';
+import Drawer from '../container/Drawer';
 //import logo from './logo.svg';
 import { WithRouterProps } from '../../../core-features/feature-router/with-router';
-import { selectTodoList } from '../../../modules/module-todo-list/client/redux-selectors-todo-list';
+
+import allClientModules from '../../../all-client-modules';
 
 import useStyles from './MainLayout.css';
 
@@ -25,15 +25,67 @@ export default function MainLayout(props: WithRouterProps) {
 
   const classes = useStyles();
   const [mobileOpen, setMobileOpen] = React.useState(true);
-  const todoList = useSelector(selectTodoList);
   const isMobile = useMediaQuery((theme: Theme) =>
     theme.breakpoints.down('sm')
   );
 
+
+  // ======================================================
+  // HANDLERS
+  // ======================================================
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
 
+
+  // ======================================================
+  // RENDERS
+  // ======================================================
+  function renderMenu() {
+    return (
+      <>
+        <Hidden mdUp>
+          <DrawerMui
+            variant="temporary"
+            anchor={'left'}
+            open={mobileOpen}
+            classes={{
+              paper: classes.drawerPaper,
+            }}
+            onClose={handleDrawerToggle}
+            ModalProps={{
+              keepMounted: true, // Better open performance on mobile.
+            }}
+          >
+            <Drawer
+              { ...props }
+              clientModules={ allClientModules }
+              isMobile={ true }
+            />
+          </DrawerMui>
+        </Hidden>
+
+        <Hidden smDown>
+          <DrawerMui
+            variant="permanent"
+            open
+            classes={{
+              paper: classes.drawerPaper,
+            }}
+          >
+            <Drawer
+              { ...props }
+              clientModules={ allClientModules }
+            />
+          </DrawerMui>
+        </Hidden>
+      </>
+    );
+  }
+
+  // ======================================================
+  // MAIN RENDER
+  // ======================================================
   return (
     <div className={classes.root}>
       <div className={classes.appFrame}>
@@ -58,34 +110,7 @@ export default function MainLayout(props: WithRouterProps) {
           </Toolbar>
         </AppBar>
 
-        <Hidden mdUp>
-          <DrawerMui
-            variant="temporary"
-            anchor={'left'}
-            open={mobileOpen}
-            classes={{
-              paper: classes.drawerPaper,
-            }}
-            onClose={handleDrawerToggle}
-            ModalProps={{
-              keepMounted: true, // Better open performance on mobile.
-            }}
-          >
-            <Drawer todoList={todoList}/>
-          </DrawerMui>
-        </Hidden>
-
-        <Hidden smDown>
-          <DrawerMui
-            variant="permanent"
-            open
-            classes={{
-              paper: classes.drawerPaper,
-            }}
-          >
-            <Drawer todoList={todoList}/>
-          </DrawerMui>
-        </Hidden>
+        { renderMenu() }
 
         {/*<img src={logo} className="App-logo" alt="logo"/>*/}
 

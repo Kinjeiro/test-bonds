@@ -5,24 +5,44 @@ import { makeStyles } from '@material-ui/styles';
 import { Theme } from '@material-ui/core/styles';
 
 import { history } from '../../../core-features/feature-redux/configureStore';
-
-import { Todo } from '../../../modules/module-todo-list/client/model-todo';
+import ClientModule from '../../../core-features/feature-uni-modules/ClientModule';
 
 // ======================================================
 // MODULE
 // ======================================================
-import TodoIcon from './TodoIcon';
-
 const useStyles = makeStyles((theme: Theme) => ({
   root: {},
   drawerHeader: { ...theme.mixins.toolbar },
 }));
 
-export default function Drawer(props: { todoList: Todo[] }) {
+export interface Props {
+  clientModules: ClientModule[],
+  isMobile?: boolean,
+}
+
+export default function Drawer(props: Props) {
   const {
-    todoList,
+    clientModules,
+    isMobile,
   } = props;
   const classes = useStyles();
+
+  function renderModuleMenuItem(clientModules: ClientModule) {
+    const {
+      moduleName,
+      getRoutes,
+      MenuRender,
+    } = clientModules;
+
+    return getRoutes && MenuRender && (
+      <MenuRender
+        { ...props }
+        key={ moduleName }
+        isMobile={ isMobile }
+        isActive={ undefined }
+      />
+    );
+  }
 
   return (
     <div>
@@ -41,12 +61,9 @@ export default function Drawer(props: { todoList: Todo[] }) {
       <Divider/>
 
       <List>
-        <ListItem button onClick={() => history.push('/todo')}>
-          <ListItemIcon>
-            <TodoIcon todoList={ todoList }/>
-          </ListItemIcon>
-          <ListItemText primary="Todo"/>
-        </ListItem>
+        {
+          clientModules.map(renderModuleMenuItem)
+        }
       </List>
     </div>
   );
