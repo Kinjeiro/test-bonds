@@ -54,7 +54,7 @@
     "release:major": "npm version major -m \"chore(*) major version: %s\"",
     "release:prepatch": "npm version prepatch -m \"chore(*) preptch version: %s\"",
     "release:prerelease": "npm version prerelease -m \"chore(*) prerelease version: %s\"",
-    "preversion": "npm test"
+    "preversion": "npm test -- --watchAll=false"
   },
   "browserslist": {
     "production": [
