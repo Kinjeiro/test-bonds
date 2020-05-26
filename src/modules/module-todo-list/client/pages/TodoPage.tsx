@@ -1,7 +1,7 @@
 import { Button, Grid, Typography } from '@material-ui/core';
 import { Theme } from '@material-ui/core/styles';
 import { makeStyles } from '@material-ui/styles';
-import React from 'react';
+import React, { useCallback } from 'react';
 
 import TodoDialog from '../components/TodoDialog';
 import TodoTable from '../components/TodoTable';
@@ -35,13 +35,13 @@ const TodoPage : React.FunctionComponent<Props> = () => {
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
 
-  const handleClose = () => {
+  const handleClose = useCallback(() => {
     setOpen(false);
-  };
+  }, [setOpen]);
 
-  const handleAddTodo = () => {
+  const handleAddTodo = useCallback(() => {
     setOpen(true);
-  };
+  }, [setOpen]);
 
   return (
     <Grid container className={classes.root}>

@@ -1,7 +1,7 @@
 // prettier-ignore
 import { Button, Dialog, DialogActions, DialogTitle, TextField } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
-import React, { ChangeEvent } from 'react';
+import React, { ChangeEvent, useCallback, useState } from 'react';
 
 import { useActions } from '../../../../core-features/feature-redux/use-actions';
 
@@ -24,12 +24,12 @@ export default function TodoDialog(props: Props) {
 	const classes = useStyles();
 	const { actionAddTodo } = useActions(actions);
 
-  const [newTodoText, setNewTodoText] = React.useState('');
+  const [newTodoText, setNewTodoText] = useState('');
 
   // ======================================================
   // HANDLERS
   // ======================================================
-	const handleClose = () => {
+	const handleClose = useCallback(() => {
     actionAddTodo({
 			id: Math.random(),
 			completed: false,
@@ -39,11 +39,11 @@ export default function TodoDialog(props: Props) {
 
 		// reset todo text if user reopens the dialog
 		setNewTodoText('');
-	};
+	}, [actionAddTodo, onClose, setNewTodoText, newTodoText]);
 
-	const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
+	const handleChange = useCallback((event: ChangeEvent<HTMLInputElement>) => {
 		setNewTodoText(event.target.value);
-	};
+	}, [setNewTodoText]);
 
 
 	// ======================================================
