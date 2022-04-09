@@ -14,7 +14,7 @@
     "jss-template": "~1.0.1",
     "localforage": "~1.7.3",
     "lodash": "~4.17.15",
-    "moment": "~2.26.0",
+    "moment": "~2.29.2",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-redux": "~7.2.0",
